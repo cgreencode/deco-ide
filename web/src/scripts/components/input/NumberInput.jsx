@@ -157,10 +157,6 @@ class NumberInput extends Component {
         width: width,
         flex: `0 0 ${width}px`,
       })
-    } else {
-      style = Object.assign({}, style, {
-        width: 0,
-      })
     }
     if (this.props.disabled) {
       style = Object.assign({}, style, {
