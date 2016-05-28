@@ -29,7 +29,7 @@ const Text = {
     defaultValue: {
       color: 'black',
       fontWeight: 'normal',
-      fontFamily: 'Helvetica, sans-serif',
+      fontFamily: 'helvetica',
       fontSize: 16,
       textAlign: 'center',
     },
@@ -40,7 +40,7 @@ const Text = {
     template+='  style={{\n'
     template+='  \tcolor: \'black\',\n'
     template+='  \tfontWeight: \'normal\',\n'
-    template+='  \tfontFamily: \'Helvetica, sans-serif\',\n'
+    template+='  \tfontFamily: \'helvetica\',\n'
     template+='  \tfontSize: 16,\n'
     template+='  \ttextAlign: \'center\',\n'
     template+='  }}>\n'

@@ -29,7 +29,7 @@ const ProgressViewIOS = {
     defaultValue: {
       color: 'black',
       fontWeight: 'normal',
-      fontFamily: 'Helvetica, sans-serif',
+      fontFamily: 'helvetica',
       fontSize: 16,
       textAlign: 'center',
     },
