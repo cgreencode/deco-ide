@@ -25,18 +25,17 @@ import {
 } from 'shared/constants/ipc/ModuleConstants'
 import FetchUtils from '../utils/FetchUtils'
 
-const _importModule = (name, version, path, registry) => {
+const _importModule = (name, version, path) => {
   return {
     type: IMPORT_MODULE,
     name,
     path,
     version,
-    registry,
   }
 }
 
-export const importModule = (name, version, path, registry) => {
-  return request(_importModule(name, version, path, registry))
+export const importModule = (name, version, path) => {
+  return request(_importModule(name, version, path))
 }
 
 export const fetchTemplateText = (url) => {
@@ -47,7 +46,7 @@ export const fetchTemplateMetadata = (url) => {
   return FetchUtils.fetchResource(url).then((result) => result.json())
 }
 
-export const fetchTemplateAndImportDependencies = (deps, textUrl, metadataUrl, path, registry) => {
+export const fetchTemplateAndImportDependencies = (deps, textUrl, metadataUrl, path) => {
 
   if (deps && ! _.isEmpty(deps) && path) {
 
@@ -56,7 +55,7 @@ export const fetchTemplateAndImportDependencies = (deps, textUrl, metadataUrl, p
     const depVersion = deps[depName]
 
     // TODO: consider waiting for npm install to finish
-    importModule(depName, depVersion, path, registry)
+    importModule(depName, depVersion, path)
   }
 
   const performFetch = () => {

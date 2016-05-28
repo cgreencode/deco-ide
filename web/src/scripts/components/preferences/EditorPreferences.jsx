@@ -25,7 +25,7 @@ import SliderInput from '../input/SliderInput'
 import CheckboxInput from '../input/CheckboxInput'
 import ColorInput from '../input/ColorInput'
 
-import { PREFERENCES, METADATA, CATEGORIES } from '../../constants/PreferencesConstants'
+import { PREFERENCES } from '../../constants/PreferencesConstants'
 
 const style = {
   display: 'flex',
@@ -45,7 +45,6 @@ export default ({
   showInvisibles,
   highlightActiveLine,
   showIndentGuides,
-  npmRegistry
 }) => {
   return (
     <div style={style}>
@@ -76,14 +75,6 @@ export default ({
         <CheckboxInput
           value={highlightActiveLine}
           onChange={onPreferenceChange.bind(null, PREFERENCES.EDITOR.HIGHLIGHT_ACTIVE_LINE)} />
-      </FormRow>
-      <FormRow
-        label={'NPM Registry'}
-        labelWidth={LABEL_WIDTH}>
-        <StringInput
-          value={npmRegistry}
-          placeholder={METADATA[CATEGORIES.EDITOR][PREFERENCES[CATEGORIES.EDITOR].NPM_REGISTRY].defaultValue}
-          onChange={onPreferenceChange.bind(null, PREFERENCES.EDITOR.NPM_REGISTRY)} />
       </FormRow>
     </div>
   )

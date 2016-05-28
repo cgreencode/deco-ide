@@ -36,7 +36,6 @@ export const PREFERENCES = {
     'SHOW_INVISIBLES',
     'SHOW_INDENT_GUIDES',
     'HIGHLIGHT_ACTIVE_LINE',
-    'NPM_REGISTRY',
   ]),
 }
 
@@ -67,9 +66,6 @@ export const METADATA = {
     },
     [PREFERENCES[CATEGORIES.EDITOR].SHOW_INDENT_GUIDES]: {
       defaultValue: false,
-    },
-    [PREFERENCES[CATEGORIES.EDITOR].NPM_REGISTRY]: {
-      defaultValue: 'https://registry.npmjs.org',
     },
   }
 }

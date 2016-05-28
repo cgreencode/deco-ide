@@ -77,8 +77,7 @@ class PreferencesPage extends Component {
             vimMode={this.props.editor[PREFERENCES.EDITOR.VIM_MODE]}
             showInvisibles={this.props.editor[PREFERENCES.EDITOR.SHOW_INVISIBLES]}
             highlightActiveLine={this.props.editor[PREFERENCES.EDITOR.HIGHLIGHT_ACTIVE_LINE]}
-            showIndentGuides={this.props.editor[PREFERENCES.EDITOR.SHOW_INDENT_GUIDES]}
-            npmRegistry={this.props.editor[PREFERENCES.EDITOR.NPM_REGISTRY]} />
+            showIndentGuides={this.props.editor[PREFERENCES.EDITOR.SHOW_INDENT_GUIDES]} />
         )
       default:
         return null
