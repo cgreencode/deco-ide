@@ -3,9 +3,9 @@
  * https://github.com/facebook/react-native
  */
 
-import React, { Component } from 'react';
-import {
+import React, {
   AppRegistry,
+  Component,
   StyleSheet,
   Text,
   View
