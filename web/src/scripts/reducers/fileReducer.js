@@ -60,7 +60,7 @@ const fileReducer = (state = initialState, action) => {
     case ADD_SUB_PATH:
       const addTree = addNode(
         Object.assign({}, state.tree),
-        state.rootPath,
+        state.rootName,
         action.fileInfo
       )
       return Object.assign({}, state, {
@@ -79,7 +79,7 @@ const fileReducer = (state = initialState, action) => {
       _.each(action.paths, (pathInfo) => {
         batchTree = addNode(
           batchTree,
-          state.rootPath,
+          state.rootName,
           pathInfo.fileInfo
         )
       })
@@ -92,7 +92,7 @@ const fileReducer = (state = initialState, action) => {
     {
       const removeTree = removeNode(
         Object.assign({}, state.tree),
-        state.rootPath,
+        state.rootName,
         action.fileInfo
       )
       const filesById = Object.assign({}, state.filesById)
@@ -109,7 +109,7 @@ const fileReducer = (state = initialState, action) => {
       _.each(action.paths, (pathInfo) => {
         batchRemoveTree = removeNode(
           batchRemoveTree,
-          state.rootPath,
+          state.rootName,
           pathInfo.fileInfo
         )
         delete filesById[pathInfo.fileInfo.id]
@@ -173,7 +173,7 @@ const fileReducer = (state = initialState, action) => {
     case REPLACE_NODE:
       const insertTree = updateSubTree(
         Object.assign({}, state.tree),
-        state.rootPath,
+        state.rootName,
         action.node,
         action.oldNode,
       )
