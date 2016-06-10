@@ -36,6 +36,8 @@ import processHandler from '../handlers/processHandler'
 import PackagerController from '../process/packagerController'
 import SimulatorController from '../process/simulatorController'
 import BuildController from '../process/buildController'
+import taskLauncher from '../process/taskLauncher'
+
 import {
   INFO,
   QUESTION,
@@ -52,6 +54,7 @@ import {
   shouldSaveProject,
   openProjectDialog,
   toggleTerm,
+  shouldCloseTab,
   openInstallModuleDialog,
   openImportTemplateDialog,
 } from '../actions/acceleratorActions'
@@ -147,6 +150,13 @@ const TemplateBuilder = function(platform) {
       click: () => {
         bridge.send(openInstallModuleDialog())
       },
+    }, {
+      type: 'separator'
+    }, {
+      label: 'Add Deco config to project',
+      click: () => {
+        taskLauncher.runTask('init-template')
+      },
     }, ],
   }
 
@@ -158,9 +168,11 @@ const TemplateBuilder = function(platform) {
       accelerator: 'CmdOrCtrl+M',
       role: 'minimize'
     }, {
-      label: 'Close',
+      label: 'Close Tab',
       accelerator: 'CmdOrCtrl+W',
-      role: 'close'
+      click: function() {
+        bridge.send(shouldCloseTab())
+      }
     }, {
       type: 'separator'
     }, {
