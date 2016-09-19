@@ -34,8 +34,6 @@ export default {
     this.timeout(10000)
     if (this.app && this.app.isRunning()) {
       return this.app.stop()
-    } else {
-      return Promise.resolve()
     }
   },
 }
