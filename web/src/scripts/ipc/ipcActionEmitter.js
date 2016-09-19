@@ -35,7 +35,13 @@ import {
   openImportTemplateDialog,
 } from '../actions/dialogActions'
 
-import * as editorActions from '../actions/editorActions'
+import {
+  cacheDoc,
+  markClean,
+  clearEditorState,
+  insertComponent,
+  insertTemplate,
+} from '../actions/editorActions'
 
 import { updateFileTreeVersion } from '../actions/fileActions'
 import { openFile } from '../actions/compositeFileActions'
@@ -115,7 +121,7 @@ const ipcActionEmitter = (store) => {
       query.temp = true
     }
     store.dispatch(clearFileState())
-    store.dispatch(editorActions.clearEditorState())
+    store.dispatch(clearEditorState())
     store.dispatch(tabActions.closeAllTabs())
     const state = store.getState()
     store.dispatch(routeActions.push({
@@ -158,11 +164,11 @@ const ipcActionEmitter = (store) => {
   })
 
   ipc.on(ON_FILE_DATA, (evt, payload) => {
-    store.dispatch(editorActions.loadDoc(payload))
+    store.dispatch(cacheDoc(payload))
   })
 
   ipc.on(SAVE_SUCCESSFUL, (evt, payload) => {
-    store.dispatch(editorActions.markClean(payload.filePath))
+    store.dispatch(markClean(payload.filePath))
     store.dispatch(markSaved(payload.filePath))
   })
 

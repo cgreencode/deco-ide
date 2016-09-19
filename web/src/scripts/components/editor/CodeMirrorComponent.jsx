@@ -53,7 +53,7 @@ export default class CodeMirrorComponent extends Component {
 
   static defaultProps = {
     options: {},
-    doc: new CodeMirror.Doc('', 'jsx'),
+    doc: new CodeMirror.Doc('javascript'),
     style: {},
   }
 

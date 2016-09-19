@@ -15,130 +15,107 @@
  *
  */
 
-import update from 'react-addons-update'
+import CodeMirror from 'codemirror'
+import _ from 'lodash'
 
-import { editorConstants as at } from '../actions'
 import DecoDoc from '../models/editor/DecoDoc'
+import {
+  CLEAR_EDITOR_STATE,
+  SET_CURRENT_DOC,
+  CACHE_DOC,
+  MARK_DIRTY,
+  MARK_CLEAN,
+  OPERATION_EDIT,
+  OPERATION_UNDO,
+  OPERATION_REDO,
+  DOC_ID_CHANGE,
+} from '../actions/editorActions'
 
 const initialState = {
+  highlightLiteralTokens: false,
   dirtyList: {},
   docCache: {},
-  openDocId: null,
 }
 
 const editorReducer = (state = initialState, action) => {
-  const {type, payload} = action
+  let cache = state.docCache
+  let id
+  let dirtyList = Object.assign({}, state.dirtyList)
 
-  switch (type) {
-
-    case at.CLEAR_EDITOR_STATE: {
-      return initialState
-    }
-
-    case at.SET_CURRENT_DOC: {
-      const {id} = payload
-      return {...state, openDocId: id}
-    }
-
-    case at.DOC_ID_CHANGE: {
-      let {openDocId, docCache} = state
-      const {oldId, newId} = payload
-
-      // Replace the portion of the filename that overlaps
-      if (openDocId.includes(oldId)) {
-        openDocId = openDocId.replace(oldId, newId)
+  switch(action.type) {
+    case OPERATION_EDIT:
+    case OPERATION_UNDO:
+    case OPERATION_REDO:
+      return state
+    case CLEAR_EDITOR_STATE:
+      _.each(state.docCache, (doc, id) => {
+        delete state.docCache[id]
+      })
+      return Object.assign({}, initialState)
+    case SET_CURRENT_DOC:
+      return Object.assign({}, state, {
+        openDocId: action.id,
+      })
+    case DOC_ID_CHANGE:
+      let openDocId = state.openDocId
+      if (openDocId.includes(action.oldId)) {
+        openDocId = openDocId.replace(action.oldId, action.newId)
       }
 
-      // If this is a cached file, replace it in the cache
-      if (docCache[oldId]) {
-
-        // Update the id on the decoDoc
-        const decoDoc = docCache[oldId]
-        decoDoc.id = newId
-
-        return update(state, {
-          openDocId: {$set: openDocId},
-          docCache: {
-            [newId]: {$set: decoDoc},
-            [oldId]: {$set: null},
-          }
-        })
-      } else {
-
-        // If a folder was renamed, potentially update children.
-        // Build an object to merge into the existing docCache.
-        const merge = Object.keys(docCache).reduce((updates, oldChildId) => {
-          const decoDoc = docCache[oldChildId]
-
-          if (decoDoc && oldChildId.includes(oldId)) {
-            const newChildId = oldChildId.replace(oldId, newId)
-            decoDoc.id = newChildId
-
-            updates[oldChildId] = null
-            updates[newChildId] = decoDoc
-          }
-        }, {})
-
-        return update(state, {
+      //check if this is a file first that is present
+      if (_.has(cache, action.oldId)) {
+        cache[action.newId] = cache[action.oldId]
+        cache[action.newId].id = action.newId
+        delete cache[action.oldId]
+        return Object.assign({}, state, {
+          docCache: cache,
           openDocId: openDocId,
-          docCache: {$merge: merge},
         })
       }
-    }
-
-    case at.CACHE_DOC: {
-      const {docCache} = state
-      const {id, code, decoRanges} = payload
-
-      if (docCache[id]) {
-        return state
-      } else {
-        return update(state, {
-          docCache: {
-            [id]: {$set: new DecoDoc(id, code, 'jsx', decoRanges)},
-          }
+      //still possibly sub docs present if the id change is of a folder
+      _.each(_.keys(cache), (key) => {
+        if (key.includes(action.oldId)) {
+          const newSubId = key.replace(action.oldId, action.newId)
+          cache[newSubId] = cache[key]
+          cache[newSubId].id = newSubId
+          delete cache[key]
+        }
+      })
+      return Object.assign({}, state, {
+        docCache: cache,
+        openDocId: openDocId,
+      })
+    case CACHE_DOC:
+      // we compare values and invalidate if the change generation is 0
+      if (!_.has(cache, action.id)) {
+        cache[action.id] = new DecoDoc(action.id, action.data, 'jsx', action.decoRanges)
+      }
+      return Object.assign({}, state, {
+        docCache: cache,
+      })
+    case MARK_DIRTY:
+      if (cache[action.id]) {
+        if (!dirtyList[action.id]) {
+          dirtyList[action.id] = true
+        }
+        return Object.assign({}, state, {
+          dirtyList: dirtyList,
         })
       }
-    }
-
-    case at.MARK_DIRTY: {
-      const {docCache, dirtyList} = state
-      const {id} = payload
-
-      if (docCache[id] && !dirtyList[id]) {
-        return update(state, {
-          dirtyList: {
-            [id]: {$set: true},
-          }
-        })
-      }
-
       return state
-    }
-
-    case at.MARK_CLEAN: {
-      const {docCache, dirtyList} = state
-      const {id} = payload
-
-      if (docCache[id] && dirtyList[id]) {
-
-        // Reset CodeMirror dirty state
-        const decoDoc = docCache[id]
-        decoDoc.markClean()
-
-        return update(state, {
-          dirtyList: {
-            [id]: {$set: false},
-          }
+    case MARK_CLEAN:
+      if (cache[action.id]) {
+        cache = Object.assign({}, state.docCache)
+        cache[action.id].markClean()
+        delete dirtyList[action.id]
+        return Object.assign({}, state, {
+          docCache: cache,
+          dirtyList: dirtyList,
         })
       }
-
       return state
-    }
-
-    default: {
+    default:
       return state
-    }
   }
 }
 

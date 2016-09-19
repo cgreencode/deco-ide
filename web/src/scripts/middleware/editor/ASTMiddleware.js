@@ -50,7 +50,7 @@ class ASTMiddleware extends Middleware {
   cursorActivity = (cm) => {
     if (!this.enabled) return
 
-    const {decoDoc: {id: filename}} = this
+    const {filename} = this
 
     const selections = cm.listSelections()
     const selection = selections[0]
@@ -63,8 +63,7 @@ class ASTMiddleware extends Middleware {
   changes = async (cm) => {
     if (!this.enabled) return
 
-    const {decoDoc, decoDoc: {id: filename}} = this
-
+    const {decoDoc, filename} = this
     const raw = await FlowController.getAST(decoDoc.code, filename)
     const ast = JSON.parse(raw)
     const elementTree = ElementTreeBuilder.elementTreeFromAST(ast)
@@ -95,8 +94,9 @@ class ASTMiddleware extends Middleware {
 
 const middleware = new ASTMiddleware()
 
-export default (dispatch, enabled) => {
+export default (dispatch, filename, enabled) => {
   middleware.setDispatchFunction(dispatch)
+  middleware.filename = filename
   middleware.enabled = enabled
   return middleware
 }

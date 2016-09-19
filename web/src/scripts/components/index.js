@@ -77,9 +77,8 @@ export SearchMenu from './menu/SearchMenu'
 export NamingBanner from './modal/NamingBanner'
 
 // Publishing
-export PublishingBrowser from './publishing/PublishingBrowser'
-export PublishingMetadata from './publishing/PublishingMetadata'
 export PublishingSignIn from './publishing/PublishingSignIn'
+export PublishingBrowser from './publishing/PublishingBrowser'
 
 // User
 export UserDetailsBanner from './user/UserDetailsBanner'

@@ -15,7 +15,7 @@
  *
  */
 
-import * as textEditorCompositeActions from './textEditorCompositeActions'
+import { setTextForDecoRange } from './editorActions'
 import LiveValueUtils from '../utils/metadata/LiveValueUtils'
 
 export const CREATE_LIVE_VALUE = 'CREATE_LIVE_VALUE'
@@ -87,6 +87,6 @@ export const setLiveValueMetadataField = (fileId, liveValueId, fieldName, fieldV
 export const SET_LIVE_VALUE_CODE = 'SET_LIVE_VALUE_CODE'
 export const setLiveValueCode = (fileId, liveValueId, code) => {
   return (dispatch, getState) => {
-    dispatch(textEditorCompositeActions.setTextForDecoRange(fileId, liveValueId, code))
+    dispatch(setTextForDecoRange(fileId, liveValueId, code))
   }
 }
