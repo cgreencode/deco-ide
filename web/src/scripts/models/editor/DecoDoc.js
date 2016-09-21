@@ -180,10 +180,6 @@ class DecoDoc extends CodeMirrorDocWrapper {
     return this.cmDoc.getRange(decoRange.from, decoRange.to)
   }
 
-  getCodeForRange(cmRange) {
-    return this.cmDoc.getRange(cmRange.from, cmRange.to)
-  }
-
   /*** SERIALIZATION ***/
 
   /**

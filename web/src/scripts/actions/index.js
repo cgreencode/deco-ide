@@ -5,4 +5,3 @@ export * as publishingActions, { at as publishingConstants } from './publishingA
 export * as astActions, { at as astConstants } from './astActions'
 export * as elementTreeActions, { at as elementTreeConstants } from './elementTreeActions'
 export * as editorActions, { at as editorConstants } from './editorActions'
-export * as textEditorCompositeActions from './textEditorCompositeActions'

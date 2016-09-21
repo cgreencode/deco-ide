@@ -20,7 +20,6 @@ import React, { Component, } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { createSelector } from 'reselect'
-import { batchActions } from 'redux-batched-subscribe'
 
 import {
   SimpleButton,
@@ -28,9 +27,9 @@ import {
   Property,
 } from '../components'
 
-import PropUtils from '../utils/PropUtils'
+import TextUtils from '../utils/editor/TextUtils'
 import { getElementByPath } from '../utils/ElementTreeUtils'
-import { elementTreeActions, textEditorCompositeActions } from '../actions'
+import { elementTreeActions } from '../actions'
 import { CONTENT_PANES } from '../constants/LayoutConstants'
 
 const styles = {
@@ -72,8 +71,6 @@ const mapStateToProps = (state) => createSelector(
 
 const mapDispatchToProps = (dispatch) => ({
   elementTreeActions: bindActionCreators(elementTreeActions, dispatch),
-  textEditorCompositeActions: bindActionCreators(textEditorCompositeActions, dispatch),
-  dispatch,
 })
 
 class ComponentProps extends Component {
@@ -88,14 +85,11 @@ class ComponentProps extends Component {
   handleValueChange(prop, value) {
     const {decoDoc, element, dispatch} = this.props
 
-    if (! decoDoc || ! element) return
+    if (! decoDoc || ! element) {
+      return
+    }
 
-    const {text, range, value: newValue} = PropUtils.getPropTextUpdate(decoDoc, prop, value)
-
-    dispatch(batchActions([
-      textEditorCompositeActions.setTextForRange(decoDoc.id, text, range),
-      elementTreeActions.updateProp(decoDoc.id, element, prop, newValue, text),
-    ]))
+    TextUtils.changePropValue(decoDoc, prop, value)
   }
 
   handleLabelClick(prop, exists) {
@@ -107,9 +101,9 @@ class ComponentProps extends Component {
 
     // If the prop exists, delete it
     if (exists) {
-      PropUtils.removeProp(decoDoc, element, prop)
+      TextUtils.removeProp(decoDoc, element, prop)
     } else {
-      PropUtils.addProp(decoDoc, element, prop)
+      TextUtils.addProp(decoDoc, element, prop)
     }
 
     dispatch(selectComponent(decoDoc.id, element.elementPath))
