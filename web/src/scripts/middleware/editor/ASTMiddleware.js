@@ -20,7 +20,7 @@ import CodeMirror from 'codemirror'
 import { bindActionCreators } from 'redux'
 import { batchActions } from 'redux-batched-subscribe'
 
-const CodeMod = Electron.remote.require('./utils/codemod/index.js')
+const FlowController = Electron.remote.require('./process/flowController.js')
 import Middleware from '../Middleware'
 import { EventTypes } from '../../constants/CodeMirrorTypes'
 import Pos from '../../models/editor/CodeMirrorPos'
@@ -81,16 +81,10 @@ export default class ASTMiddleware extends Middleware {
   analyze = async (cm) => {
     const {decoDoc, decoDoc: {id: filename}} = this
 
-    let astString
+    // TODO Figure out why calling getAST slows typing significantly.
+    const raw = await FlowController.getAST(decoDoc.code, filename)
 
-    try {
-      astString = await CodeMod.getAST(decoDoc.code)
-    } catch (e) {
-      console.log('ASTMiddleware failed to parse AST', e)
-      return
-    }
-
-    const ast = JSON.parse(astString)
+    const ast = JSON.parse(raw)
     const elementTree = ElementTreeBuilder.elementTreeFromAST(ast)
 
     this.dispatch(batchActions([
