@@ -116,8 +116,11 @@ const mapStateToProps = (state) => createSelector(
   ({preferences}) => ({
     npmRegistry: preferences[CATEGORIES.EDITOR][PREFERENCES.EDITOR.NPM_REGISTRY],
   }),
+  ({storyboard}) => ({
+    showStoryboard: storyboard.shouldShow,
+  }),
   selectors.tabContainerId,
-  (decoDoc, rootPath, componentList, ui, application, liveValuesById, preferences, tabContainerId) => ({
+  (decoDoc, rootPath, componentList, ui, application, liveValuesById, preferences, storyboard, tabContainerId) => ({
     decoDoc,
     rootPath,
     componentList,
@@ -125,6 +128,7 @@ const mapStateToProps = (state) => createSelector(
     ...application,
     liveValuesById,
     ...preferences,
+    ...storyboard,
     tabContainerId,
   })
 )
